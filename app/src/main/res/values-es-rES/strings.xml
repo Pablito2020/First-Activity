@@ -3,5 +3,5 @@
     <string name="app_name">Primera Práctica</string>
     <string name="hello_world">¡Hola Mundo!</string>
     <string name="buttonToast">Acción 1</string>
-    <string name="toastText">Has executat el botó!</string>
+    <string name="toastText">¡Has pulsado el botón!</string>
 </resources>
