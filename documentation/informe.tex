@@ -1,0 +1,110 @@
+\documentclass[12pt, letterpaper]{article}
+\usepackage{graphicx} % needed for images
+\usepackage[export]{adjustbox} % needed for adjustable images
+\usepackage{flafter} % needed for figures
+\usepackage[table]{xcolor}
+\usepackage{fancyhdr} % needed for fancy header 
+\usepackage{listings}
+\usepackage{pdflscape}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{texlogos}
+\usepackage{color}
+\usepackage{colortbl}
+\usepackage{lineno}
+\usepackage{hyperref}
+\usepackage{dirtree}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
+    }
+\lstset{aboveskip=20pt,belowskip=20pt}
+
+\graphicspath{ {images/} }
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{Aplicacions per a dispositius mòbils}
+\fancyhead[RE,LO]{Resources en Android}
+\fancyfoot[LE,RO]{\thepage}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{1pt}
+
+
+
+% information
+\title{%
+    \begin{center}
+	\includegraphics[width=4cm,height=3cm]{udl.png}
+    \end{center}
+    \line(1,0){250}\\[0.3cm]
+    \textbf{Primera Activitat: Resources en Android} \\
+    \line(1,0){250}
+    \\[0.5cm]
+	\large Aplicacions per a dispositius mòbils - Grau en Enginyería Informàtica
+}
+\author{Pablo Fraile Alonso}
+\date{\today}
+
+% document
+\begin{document}
+    
+% title
+\maketitle
+\thispagestyle{empty}
+\newpage
+\tableofcontents
+\listoffigures
+\listoftables
+\newpage
+
+\section{Comprovar si s'aplica la primera bona pràctica}
+Veiem l'estructura del projecte 
+
+\dirtree{%
+.1 FirstActivity.
+.2 app.
+.3 {...} .
+.3 src.
+.4 {...} .
+.4 main.
+.5 AndroidManifest.xml.
+.5 java -> Kotlin code.
+.5 res.
+.6 drawable.
+.7 ic\_launcher\_background.xml.
+.6 drawable-v24.
+.7 ic\_launcher\_foreground.xml.
+.6 layout.
+.7 activity\_main.xml.
+.6 mipmap-anydpi-v26.
+.7 ic\_launcher\_round.xml.
+.7 ic\_launcher.xml.
+.6 mipmap-hdpi.
+.7 ic\_launcher\_round.webp.
+.7 ic\_launcher.webp.
+.6 mipmap-mdpi.
+.7 ic\_launcher\_round.webp.
+.7 ic\_launcher.webp.
+.6 mipmap-xhdpi.
+.7 ic\_launcher\_round.webp.
+.7 ic\_launcher.webp.
+.6 mipmap-xxhdpi.
+.7 ic\_launcher\_round.webp.
+.7 ic\_launcher.webp.
+.6 mipmap-xxxhdpi.
+.7 ic\_launcher\_round.webp.
+.7 ic\_launcher.webp.
+.6 values.
+.7 colors.xml.
+.7 strings.xml.
+.7 themes.xml.
+.7 values-night.
+.8 themes.xml.
+}
+
+\end{document}
