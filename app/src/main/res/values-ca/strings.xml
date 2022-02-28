@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Primera Pràctica</string>
+    <string name="hello_world">Hola Món!</string>
+    <string name="buttonToast">Acció 1</string>
+    <string name="toastText">Has executat el botó!</string>
+</resources>
