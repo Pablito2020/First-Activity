@@ -3,4 +3,7 @@
     <string name="hello_world">Hello World</string>
     <string name="buttonToast">Action 1</string>
     <string name="toastText">You have pressed the button!</string>
+    <string name="image_1_description">Flag from the locale</string>
+    <string name="image_2_description">Typical food from the locale</string>
+    <string name="image_3_description">Favorite football club from the locale</string>
 </resources>

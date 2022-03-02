@@ -12,9 +12,11 @@
         android:layout_height="wrap_content"
         android:text="@string/hello_world"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.727"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.39" />
 
     <Button
         android:id="@+id/button"
@@ -24,9 +26,21 @@
         android:text="@string/buttonToast"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.499"
+        app:layout_constraintHorizontal_bias="0.735"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.193" />
+        app:layout_constraintVertical_bias="0.239" />
+
+    <ImageView
+        android:id="@+id/image_1"
+        android:layout_width="247dp"
+        android:layout_height="196dp"
+        android:contentDescription="@string/image_1_description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/textView"
+        app:layout_constraintHorizontal_bias="0.323"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/image_1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,4 +4,7 @@
     <string name="hello_world">Hola Món!</string>
     <string name="buttonToast">Acció 1</string>
     <string name="toastText">Has executat el botó!</string>
+    <string name="image_1_description">Bandera relacionada amb l\'idioma</string>
+    <string name="image_2_description">Plat típic relacionat amb l\'idioma</string>
+    <string name="image_3_description">Club de futbol relacionat amb l\'idioma</string>
 </resources>
