@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
         setUpButton()
     }
 
-    fun setUpButton() {
+    private fun setUpButton() {
         val button = findViewById<Button>(R.id.button)
         button.setOnClickListener {
             Toast.makeText(
@@ -23,5 +23,6 @@ class MainActivity : AppCompatActivity() {
             ).show()
         }
     }
+
 
 }

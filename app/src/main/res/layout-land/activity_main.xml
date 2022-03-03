@@ -41,6 +41,6 @@
         app:layout_constraintHorizontal_bias="0.323"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/image_1" />
+        app:srcCompat="@drawable/image_1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
