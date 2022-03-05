@@ -2,7 +2,7 @@
 \usepackage{graphicx} % needed for images
 \usepackage[export]{adjustbox} % needed for adjustable images
 \usepackage{flafter} % needed for figures
-\usepackage[table]{xcolor}
+\usepackage[table, dvipsnames]{xcolor}
 \usepackage{fancyhdr} % needed for fancy header 
 \usepackage{listings}
 \usepackage{pdflscape}
@@ -14,15 +14,32 @@
 \usepackage{lineno}
 \usepackage{hyperref}
 \usepackage{dirtree}
+
 \hypersetup{
     colorlinks=true,
     linkcolor=blue,
     filecolor=magenta,      
     urlcolor=cyan,
-    pdftitle={Overleaf Example},
     pdfpagemode=FullScreen,
     }
 \lstset{aboveskip=20pt,belowskip=20pt}
+
+\lstdefinelanguage{Kotlin}{
+  comment=[l]{//},
+  commentstyle={\color{gray}\ttfamily},
+  emph={filter, first, firstOrNull, forEach, lazy, map, mapNotNull, println},
+  emphstyle={\color{OrangeRed}},
+  identifierstyle=\color{black},
+  keywords={!in, !is, abstract, actual, annotation, as, as?, break, by, catch, class, companion, const, constructor, continue, crossinline, data, delegate, do, dynamic, else, enum, expect, external, false, field, file, final, finally, for, fun, get, if, import, in, infix, init, inline, inner, interface, internal, is, lateinit, noinline, null, object, open, operator, out, override, package, param, private, property, protected, public, receiveris, reified, return, return@, sealed, set, setparam, super, suspend, tailrec, this, throw, true, try, typealias, typeof, val, var, vararg, when, where, while},
+  keywordstyle={\color{NavyBlue}\bfseries},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]",
+  morestring=[s]{"""*}{*"""},
+  ndkeywords={@Deprecated, @JvmField, @JvmName, @JvmOverloads, @JvmStatic, @JvmSynthetic, Array, Byte, Double, Float, Int, Integer, Iterable, Long, Runnable, Short, String, Any, Unit, Nothing},
+  ndkeywordstyle={\color{BurntOrange}\bfseries},
+  sensitive=true,
+  stringstyle={\color{ForestGreen}\ttfamily},
+}
 
 \graphicspath{ {images/} }
 
@@ -63,7 +80,7 @@
 \newpage
 
 \section{Comprovar si s'aplica la primera bona pràctica}
-Veiem l'estructura del projecte 
+Veiem l'estructura del projecte i en un principi si que compleix la primera bona pràctica, ja que té diferents recursos separats en diferents arxius, tal i com es veu en l'arbre d'arxius:
 
 \dirtree{%
 .1 FirstActivity.
@@ -73,38 +90,205 @@ Veiem l'estructura del projecte
 .4 {...} .
 .4 main.
 .5 AndroidManifest.xml.
-.5 java -> Kotlin code.
+.5 java.
 .5 res.
-.6 drawable.
-.7 ic\_launcher\_background.xml.
-.6 drawable-v24.
-.7 ic\_launcher\_foreground.xml.
+.6 drawable-{...}.
 .6 layout.
-.7 activity\_main.xml.
-.6 mipmap-anydpi-v26.
-.7 ic\_launcher\_round.xml.
-.7 ic\_launcher.xml.
-.6 mipmap-hdpi.
-.7 ic\_launcher\_round.webp.
-.7 ic\_launcher.webp.
-.6 mipmap-mdpi.
-.7 ic\_launcher\_round.webp.
-.7 ic\_launcher.webp.
-.6 mipmap-xhdpi.
-.7 ic\_launcher\_round.webp.
-.7 ic\_launcher.webp.
-.6 mipmap-xxhdpi.
-.7 ic\_launcher\_round.webp.
-.7 ic\_launcher.webp.
-.6 mipmap-xxxhdpi.
-.7 ic\_launcher\_round.webp.
-.7 ic\_launcher.webp.
+.6 mipmap-{....}.
 .6 values.
-.7 colors.xml.
-.7 strings.xml.
-.7 themes.xml.
-.7 values-night.
-.8 themes.xml.
 }
+
+En cambi, si ens fixem al arxiu de layout, veiem que tot i que tingui creat l'arxiu \textit{strings.xml}, han "hardcodejat" la string "Hello World" dins de la component Textview:
+\begin{verbatim}
+<TextView
+    android:id="@+id/textView"
+    ....
+    android:text="Hello World"
+    ...
+/>
+\end{verbatim}
+
+Quant realment, si es volgués separar els diferents recursos, s'hauria de cambiar el text a que referencii a les strings localitzades a: res/values/strings.xml.
+
+\begin{verbatim}
+<TextView
+    android:id="@+id/textView"
+    ....
+    android:text="@string/hello_world"
+    ...
+/>
+\end{verbatim}
+
+\section{Comprobar si se aplica la segunda buena práctica y añadir recursos alternativos para la app. }
+La segona pràctica consisteix en "Provide alternative resources to support specific device configurations". Veiem que tot i que Android Studio ens hagi proporcionat diferents resources, aquests únicament venen adaptat
+per un dispositiu móvil (no tablet), amb layout portrait (vertical) i idioma anglés, per tant es podría dir que no compleix la segona bona pràctica.
+
+
+\dirtree{%
+.0 res.
+.1 drawable.
+.2 image\_1.png.
+.2 image\_2.png.
+.2 image\_3.png.
+.1 drawable-ca.
+.2 image\_1.png.
+.2 image\_2.png.
+.2 image\_3.png.
+.1 drawable-es.
+.2 image\_1.png.
+.2 image\_2.png.
+.2 image\_3.png.
+.1 layout.
+.2 activity\_main.xml.
+.1 layout-land.
+.2 activity\_main.xml.
+.1 layout-large.
+.2 activity\_main.xml.
+.1 layout-large-port.
+.2 activity\_main.xml.
+.1 mipmap-anydpi-v26.
+.2 ic\_launcher\_round.xml.
+.2 ic\_launcher.xml.
+.1 mipmap-ca-hdpi.
+.2 ic\_launcher\_foreground.png.
+.2 ic\_launcher.png.
+.2 ic\_launcher\_round.png.
+.1 mipmap-ca-mdpi.
+.2 ic\_launcher\_foreground.png.
+.2 ic\_launcher.png.
+.2 ic\_launcher\_round.png.
+.1 mipmap-ca-xhdpi.
+.2 ic\_launcher\_foreground.png.
+.2 ic\_launcher.png.
+.2 ic\_launcher\_round.png.
+.1 mipmap-ca-xxhdpi.
+.2 ic\_launcher\_foreground.png.
+.2 ic\_launcher.png.
+.2 ic\_launcher\_round.png.
+.1 mipmap-ca-xxxhdpi.
+.2 ic\_launcher\_foreground.png.
+.2 ic\_launcher.png.
+.2 ic\_launcher\_round.png.
+.1 mipmap-es-hdpi.
+.2 ic\_launcher\_foreground.png.
+.2 ic\_launcher.png.
+.2 ic\_launcher\_round.png.
+.1 mipmap-es-mdpi.
+.2 ic\_launcher\_foreground.png.
+.2 ic\_launcher.png.
+.2 ic\_launcher\_round.png.
+.1 mipmap-es-xhdpi.
+.2 ic\_launcher\_foreground.png.
+.2 ic\_launcher.png.
+.2 ic\_launcher\_round.png.
+.1 mipmap-es-xxhdpi.
+.2 ic\_launcher\_foreground.png.
+.2 ic\_launcher.png.
+.2 ic\_launcher\_round.png.
+.1 mipmap-es-xxxhdpi.
+.2 ic\_launcher\_foreground.png.
+.2 ic\_launcher.png.
+.2 ic\_launcher\_round.png.
+.1 mipmap-hdpi.
+.2 ic\_launcher\_foreground.png.
+.2 ic\_launcher.png.
+.2 ic\_launcher\_round.png.
+.1 mipmap-mdpi.
+.2 ic\_launcher\_foreground.png.
+.2 ic\_launcher.png.
+.2 ic\_launcher\_round.png.
+.1 mipmap-xhdpi.
+.2 ic\_launcher\_foreground.png.
+.2 ic\_launcher.png.
+.2 ic\_launcher\_round.png.
+.1 mipmap-xxhdpi.
+.2 ic\_launcher\_foreground.png.
+.2 ic\_launcher.png.
+.2 ic\_launcher\_round.png.
+.1 mipmap-xxxhdpi.
+.2 ic\_launcher\_foreground.png.
+.2 ic\_launcher.png.
+.2 ic\_launcher\_round.png.
+.1 values.
+.2 colors.xml.
+.2 ic\_launcher\_background.xml.
+.2 strings.xml.
+.2 themes.xml.
+.1 values-ca.
+.2 ic\_launcher\_background.xml.
+.2 strings.xml.
+.1 values-es-rES.
+.2 ic\_launcher\_background.xml.
+.2 strings.xml.
+.1 values-night.
+.2 themes.xml.
+}
+
+\section{Añadir la funcionalidad de mostrar un mensaje emergente (Toast) en un botón del layout}
+Se han provado varias opciones:
+\subsection{Pasar como parametro a la función setOnClickListener una View con un método implementado onClickListener}
+\begin{lstlisting}[language=Kotlin]
+    val button = findViewById<Button>(R.id.button)
+    button.setOnClickListener (
+        View.OnClickListener() {
+            Toast.makeText(
+                applicationContext,
+                R.string.toastText,
+                Toast.LENGTH_SHORT
+            ).show()
+        })
+    }
+\end{lstlisting}
+Que en kotlin, con su estilo de lambda, podemos simplificar a:
+
+\begin{lstlisting}[language=Kotlin]
+    val button = findViewById<Button>(R.id.button)
+    button.setOnClickListener {
+        Toast.makeText(
+            applicationContext,
+            R.string.toastText,
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+\end{lstlisting}
+
+También, podriamos haver creado una inner class Toaster para poder ejecutar el boton:
+\begin{lstlisting}[language=Kotlin]
+    private fun setUpButton() {
+        val button = findViewById<Button>(R.id.button)
+        button.setOnClickListener (Toaster())
+    }
+
+    private inner class Toaster : View.OnClickListener {
+        override fun onClick(p0: View?) {
+            Toast.makeText(
+                applicationContext,
+                R.string.toastText,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+\end{lstlisting}
+
+En caso de que la hiciesemos estática, tendriamos un poco más de problemas, ya que deveríamos passar la View por parámetro para poder obtener el contexto:
+\begin{lstlisting}[language=Kotlin]
+    fun setUpButton() {
+        val button = findViewById<Button>(R.id.button)
+        button.setOnClickListener (Toaster())
+    }
+
+    private class Toaster : View.OnClickListener {
+        override fun onClick(p0: View?) {
+            if (p0 != null) {
+                Toast.makeText(
+                    p0.context,
+                    R.string.toastText,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+\end{lstlisting}
+
 
 \end{document}
