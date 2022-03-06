@@ -4,6 +4,7 @@
 \usepackage{flafter} % needed for figures
 \usepackage[table, dvipsnames]{xcolor}
 \usepackage{fancyhdr} % needed for fancy header 
+\usepackage{polyglossia} % needed for catalan support
 \usepackage{listings}
 \usepackage{pdflscape}
 \usepackage{tabularx}
@@ -15,6 +16,7 @@
 \usepackage{hyperref}
 \usepackage{dirtree}
 
+\setmainlanguage{catalan}
 
 \hypersetup{
     colorlinks=true,
@@ -22,6 +24,7 @@
     urlcolor=blue,
     pdfpagemode=FullScreen,
     }
+
 \lstset{basicstyle=\ttfamily\footnotesize,breaklines=true}
 \lstset{aboveskip=20pt,belowskip=20pt}
 
@@ -63,7 +66,7 @@
     \textbf{Primera Activitat: Resources en Android} \\
     \line(1,0){250}
     \\[0.5cm]
-	\large Aplicacions per a dispositius mòbils - Grau en Enginyería Informàtica
+	\large Aplicacions per a dispositius mòbils - Grau en Enginyeria Informàtica
 }
 \author{Pablo Fraile Alonso}
 \date{\today}
@@ -80,7 +83,9 @@
 \newpage
 
 \section{Comprovar si s'aplica la primera bona pràctica}
-Veiem l'estructura del projecte i en un principi si que compleix la primera bona pràctica, ja que té diferents recursos separats en diferents arxius, tal i com es veu en l'arbre d'arxius:
+Veiem l'estructura del projecte i en un principi ens dona a entendre que compleix la primera bona pràctica, ja que té diferents recursos separats en diferents fitxers. 
+
+A més, l'arxiu MainActivity.kt únicament carrega el layout executant la crida \textit{setContentView}, cosa que ens demostra que la lógica del codi no sap res de com es troba estructurat el layout. A continuació es mostra l'arbre de directoris:
 
 \vspace{0.5cm}
 \dirtree{%
@@ -100,7 +105,7 @@ Veiem l'estructura del projecte i en un principi si que compleix la primera bona
 }
 \vspace{0.5cm}
 
-En cambi, si ens fixem al arxiu de layout, veiem que tot i que tingui creat l'arxiu \textit{strings.xml}, han "hardcodejat" la string "Hello World" dins de la component Textview:
+En canvi, si ens fixem a l'arxiu de layout, veiem que han "hardcodejat" la string \textit{Hello World} dins de la component TextView (tot i que existeixi \textit{strings.xml}):
 
 \begin{lstlisting}[language=XML]
 <TextView
@@ -111,7 +116,7 @@ En cambi, si ens fixem al arxiu de layout, veiem que tot i que tingui creat l'ar
 />
 \end{lstlisting}
 
-Quant realment, si es volgués separar els diferents recursos, s'hauria de cambiar el text a que referencii a les strings localitzades a: res/values/strings.xml.
+Quan realment, si es volgués separar els diferents recursos, s'hauria de canviar el text per a que refereixi a les strings localitzades a: res/values/strings.xml.
 
 \begin{lstlisting}[language=XML]
 <TextView
@@ -122,12 +127,56 @@ Quant realment, si es volgués separar els diferents recursos, s'hauria de cambi
 />
 \end{lstlisting}
 
-\newpage
-\section{Comprobar si se aplica la segunda buena práctica y añadir recursos alternativos para la app. }
-La segona pràctica consisteix en "Provide alternative resources to support specific device configurations". Veiem que tot i que Android Studio ens hagi proporcionat diferents resources, aquests únicament venen adaptat
-per un dispositiu móvil (no tablet), amb layout portrait (vertical) i idioma anglés, per tant es podría dir que no compleix la segona bona pràctica.\\
+Per tant, \textbf{no} es compleix la primera bona pràctica.
 
-Després d'afegir compatibilitat amb diferents idiomes (català, castellà i anglés), modularitat de les diferents imatges i icona de l'app depenent de l'idioma del dispositiu i suportar diferents tamanys (tablet i móbil) i disposicions (horitzontal i vertical) l'estructura de la carpeta resources queda de la següent forma:
+\newpage
+\section{Comprovar si s'aplica la segona bona pràctica i afegir recursos alternatius}
+
+La segona pràctica consisteix en proveir recursos alternatius per suportar diverses configuracions d'un dispositiu. Veiem que, tot i que Android Studio ens hagi proporcionat diferents resources, aquests únicament venen adaptats
+per un dispositiu mòbil, amb orientació vertical i idioma anglès. 
+
+Per tant, no compleix la segona bona pràctica tot i que ens proporcioni les facilitats per poder afegir compatibilitat.\\
+
+En el cas de la nostra aplicació, afegirem suport per a:
+\begin{itemize}
+    \item Idioma català.
+    \item Idioma castellà.
+    \item Orientació horitzontal per mòbils.
+    \item Dispositius tablet (orientació vertical).
+    \item Dispositius tablet (orientació horitzontal).
+    \item Icones personalitzades depenent de l'idioma.
+    \item Imatges personalitzades depenent de l'idioma.
+\end{itemize}
+
+Per afegir aquestes funcionalitats, s'han hagut de modificar i crear els diferents layouts, icones i arxius de strings. A més, als layouts, s'ha fet que els components referenciïn als identificadors corresponents del recurs que volen emprar.
+
+\begin{lstlisting}[language=XML]
+    activity_main.xml:
+
+    <TextView
+        android:id="@+id/textView"
+        ...
+        android:text="@string/hello_world"
+        ...
+    />
+
+    <Button
+        android:id="@+id/button"
+        ...
+        android:text="@string/buttonToast"
+        ...
+    />
+
+    <ImageView
+        android:id="@+id/image_1"
+        android:contentDescription="@string/image_1_description"
+        app:srcCompat="@drawable/image_1" 
+        ...
+    />
+
+\end{lstlisting}
+
+Després de les modificacions, el directori de recursos (res) ha quedat de la següent forma:
 
 \vspace{0.5cm}
 \dirtree{%
@@ -144,54 +193,54 @@ Després d'afegir compatibilitat amb diferents idiomes (català, castellà i ang
 .2 image\_1.png.
 .2 image\_2.png.
 .2 image\_3.png.
-.1 layout.
+.1 layout (layout "default" -> Mobile + portrait).
 .2 activity\_main.xml.
-.1 layout-land.
+.1 layout-land (layout Mobile + landscape).
 .2 activity\_main.xml.
-.1 layout-large.
+.1 layout-large (layout Tablet + landscape).
 .2 activity\_main.xml.
-.1 layout-large-port.
+.1 layout-large-port (layout Tablet + portrait).
 .2 activity\_main.xml.
 .1 mipmap-anydpi-v26.
 .2 ic\_launcher\_round.xml.
 .2 ic\_launcher.xml.
-.1 mipmap-ca-hdpi.
+.1 mipmap-ca-hdpi (catalan hdpi icon).
 .2 ic\_launcher\_foreground.png.
 .2 ic\_launcher.png.
 .2 ic\_launcher\_round.png.
-.1 mipmap-ca-mdpi.
+.1 mipmap-ca-mdpi (catalan mdpi icon).
 .2 ic\_launcher\_foreground.png.
 .2 ic\_launcher.png.
 .2 ic\_launcher\_round.png.
-.1 mipmap-ca-xhdpi.
+.1 mipmap-ca-xhdpi (catalan xhdpi icon). 
 .2 ic\_launcher\_foreground.png.
 .2 ic\_launcher.png.
 .2 ic\_launcher\_round.png.
-.1 mipmap-ca-xxhdpi.
+.1 mipmap-ca-xxhdpi (catalan xxhdpi icon).
 .2 ic\_launcher\_foreground.png.
 .2 ic\_launcher.png.
 .2 ic\_launcher\_round.png.
-.1 mipmap-ca-xxxhdpi.
+.1 mipmap-ca-xxxhdpi (catalan xxxhdpi icon).
 .2 ic\_launcher\_foreground.png.
 .2 ic\_launcher.png.
 .2 ic\_launcher\_round.png.
-.1 mipmap-es-hdpi.
+.1 mipmap-es-hdpi (spanish hdpi icon).
 .2 ic\_launcher\_foreground.png.
 .2 ic\_launcher.png.
 .2 ic\_launcher\_round.png.
-.1 mipmap-es-mdpi.
+.1 mipmap-es-mdpi (spanish mdpi icon).
 .2 ic\_launcher\_foreground.png.
 .2 ic\_launcher.png.
 .2 ic\_launcher\_round.png.
-.1 mipmap-es-xhdpi.
+.1 mipmap-es-xhdpi (spanish xhdpi icon).
 .2 ic\_launcher\_foreground.png.
 .2 ic\_launcher.png.
 .2 ic\_launcher\_round.png.
-.1 mipmap-es-xxhdpi.
+.1 mipmap-es-xxhdpi (spanish xxhdpi icon).
 .2 ic\_launcher\_foreground.png.
 .2 ic\_launcher.png.
 .2 ic\_launcher\_round.png.
-.1 mipmap-es-xxxhdpi.
+.1 mipmap-es-xxxhdpi (spanish xxxhdpi icon) .
 .2 ic\_launcher\_foreground.png.
 .2 ic\_launcher.png.
 .2 ic\_launcher\_round.png.
@@ -223,46 +272,20 @@ Després d'afegir compatibilitat amb diferents idiomes (català, castellà i ang
 .1 values-ca.
 .2 ic\_launcher\_background.xml.
 .2 strings.xml.
-.1 values-es-rES.
+.1 values-es-rES. 
 .2 ic\_launcher\_background.xml.
 .2 strings.xml.
 .1 values-night.
 .2 themes.xml.
 }
 \vspace{0.5cm}
-A més, s'han hagut de modificar els diferents layouts, per a que totes les strings, imatges, etc. referenciin a les imatges i strings corresponents.
-
-\begin{lstlisting}[language=XML]
-    activity_main.xml:
-
-    <TextView
-        android:id="@+id/textView"
-        ...
-        android:text="@string/hello\_world"
-        ...
-    />
-
-    <Button
-        android:id="@+id/button"
-        ...
-        android:text="@string/buttonToast"
-        ...
-    />
-
-    <ImageView
-        android:id="@+id/image\_1"
-        android:contentDescription="@string/image\_1\_description"
-        app:srcCompat="@drawable/image\_1" 
-        ...
-    />
-
-\end{lstlisting}
 
 \newpage
-\section{Añadir la funcionalidad de mostrar un mensaje emergente (Toast) en un botón del layout}
-Se han provado varias opciones para añadir funcionalidad al botón, todas funcionan y son igual de válidas:
+\section{Afegir la funcionalitat de mostrar un missatge emergent (Toast) en un botó del layout}
+S'han provat varies opcions per afegir aquesta funcionalitat i que es comentaran en les subseccions següents.
 
-\subsection{Usando anonymous classes/lambdas}
+\subsection{Emprant anonymous classes/lambdas}
+S'obté un objecte Button a partir del resource ID definit al layout. A l'objecte button es defineix l'acció de click passant per paràmetre un objecte de tipus OnClickListener, que creem com una classe anònima.
 
 \begin{lstlisting}[language=Kotlin]
     val button = findViewById<Button>(R.id.button)
@@ -276,7 +299,8 @@ Se han provado varias opciones para añadir funcionalidad al botón, todas funci
         })
     }
 \end{lstlisting}
-Que en kotlin, con su estilo de lambda, podemos simplificar a:
+
+Amb Kotlin, emprant el seu estil de lambda, podem simplificar a:
 
 \begin{lstlisting}[language=Kotlin]
     val button = findViewById<Button>(R.id.button)
@@ -289,7 +313,8 @@ Que en kotlin, con su estilo de lambda, podemos simplificar a:
     }
 \end{lstlisting}
 
-\subsection{Creando una inner class}
+\subsection{Creant una inner class}
+Com l'inner class es troba \textit{"lligada"} a la classe de l'Activity, podem accedir al context de l'aplicació directament.
 
 \begin{lstlisting}[language=Kotlin]
     private fun setUpButton() {
@@ -308,8 +333,9 @@ Que en kotlin, con su estilo de lambda, podemos simplificar a:
     }
 \end{lstlisting}
 
-\subsection{Creando una clase estática}
-En caso de que la hiciesemos estática, tendriamos un poco más de problemas, ya que deberíamos passar la View por parámetro para poder obtener el contexto:
+\subsection{Creant una classe estàtica}
+Com en aquest cas és una classe estàtica (per defecte en Kotlin), no podem accedir al context directament ja que no estem lligats a la classe, per tant, accedim al context a partir de la View passada per paràmetre.
+
 \begin{lstlisting}[language=Kotlin]
     fun setUpButton() {
         val button = findViewById<Button>(R.id.button)
@@ -329,8 +355,10 @@ En caso de que la hiciesemos estática, tendriamos un poco más de problemas, ya
     }
 \end{lstlisting}
 
-\subsection{Añadir que función se debe de ejecutar en el xml del layout}
-En el layout:
+\subsection{Afegir quina funció s'ha d'executar al xml del layout}
+En aquest cas, es va emprar l'atribut \textit{onClick} del xml. Aquest no es tant recomanable com els anteriors\footnote{De fet, aquesta opció es marca com a deprecated (obsoleta).} ja que s'ha d'afegir l'opció a tots els diferents layouts, i no ho tenim localitzat en l'arxiu kotlin de l'activitat.\\
+
+En els layouts:
 \begin{lstlisting}[language=XML]
     <Button
         android:id="@+id/button"
@@ -340,7 +368,7 @@ En el layout:
     />
 \end{lstlisting}
 
-En el código de la activity:
+En el codi:
 \begin{lstlisting}[language=Kotlin]
     fun showToast(view: View) =
         Toast.makeText(
@@ -351,22 +379,21 @@ En el código de la activity:
 \end{lstlisting}
 
 \newpage
-\section{Imágenes del proyecto y repositorio remoto}
+\section{Imatges del projecte i repositori remot}
 
-Como no se pueden poner todos los archivos xml del proyecto en un documento pdf, se ha decidido añadir el link al repositorio de git, por 
-si el/la lector/a quiere consultar cualquier archivo. El repositorio se puede encontrar \href{https://github.com/Pablito2020/First-Activity}{aquí.}
+Com no es poden afegir tots els arxius xml i recursos del projecte en un document pdf, s'ha decidit afegir un link al repositori remot de git, per si el lector/a vol consultar qualsevol arxiu. El repositori es pot trobar \href{https://github.com/Pablito2020/First-Activity}{aquí.}
 
 \begin{figure}[!htbp]
     \includegraphics[scale = 0.12]{smartphone-vertical.jpg}
     \centering
-    \caption{Aplicación en un móbil, con idioma inglés y layout portrait}
+    \caption{Aplicació en un mòbil, idioma anglès i orientació vertical}
     \label{vertical}
 \end{figure}
 
 \begin{figure}[!htbp]
     \includegraphics[scale = 0.12]{smartphone-land.PNG}
     \centering
-    \caption{Aplicación en un móbil, con idioma inglés y layout landscape}
+    \caption{Aplicació en un mòbil, idioma anglès i orientació horitzontal}
     \label{vertical}
 \end{figure}
 
