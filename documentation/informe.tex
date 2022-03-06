@@ -15,13 +15,14 @@
 \usepackage{hyperref}
 \usepackage{dirtree}
 
+
 \hypersetup{
     colorlinks=true,
-    linkcolor=blue,
-    filecolor=magenta,      
-    urlcolor=cyan,
+    linkcolor=black,
+    urlcolor=blue,
     pdfpagemode=FullScreen,
     }
+\lstset{basicstyle=\ttfamily\footnotesize,breaklines=true}
 \lstset{aboveskip=20pt,belowskip=20pt}
 
 \lstdefinelanguage{Kotlin}{
@@ -76,12 +77,12 @@
 \newpage
 \tableofcontents
 \listoffigures
-\listoftables
 \newpage
 
 \section{Comprovar si s'aplica la primera bona pràctica}
 Veiem l'estructura del projecte i en un principi si que compleix la primera bona pràctica, ja que té diferents recursos separats en diferents arxius, tal i com es veu en l'arbre d'arxius:
 
+\vspace{0.5cm}
 \dirtree{%
 .1 FirstActivity.
 .2 app.
@@ -97,33 +98,38 @@ Veiem l'estructura del projecte i en un principi si que compleix la primera bona
 .6 mipmap-{....}.
 .6 values.
 }
+\vspace{0.5cm}
 
 En cambi, si ens fixem al arxiu de layout, veiem que tot i que tingui creat l'arxiu \textit{strings.xml}, han "hardcodejat" la string "Hello World" dins de la component Textview:
-\begin{verbatim}
+
+\begin{lstlisting}[language=XML]
 <TextView
     android:id="@+id/textView"
     ....
     android:text="Hello World"
     ...
 />
-\end{verbatim}
+\end{lstlisting}
 
 Quant realment, si es volgués separar els diferents recursos, s'hauria de cambiar el text a que referencii a les strings localitzades a: res/values/strings.xml.
 
-\begin{verbatim}
+\begin{lstlisting}[language=XML]
 <TextView
     android:id="@+id/textView"
     ....
     android:text="@string/hello_world"
     ...
 />
-\end{verbatim}
+\end{lstlisting}
 
+\newpage
 \section{Comprobar si se aplica la segunda buena práctica y añadir recursos alternativos para la app. }
 La segona pràctica consisteix en "Provide alternative resources to support specific device configurations". Veiem que tot i que Android Studio ens hagi proporcionat diferents resources, aquests únicament venen adaptat
-per un dispositiu móvil (no tablet), amb layout portrait (vertical) i idioma anglés, per tant es podría dir que no compleix la segona bona pràctica.
+per un dispositiu móvil (no tablet), amb layout portrait (vertical) i idioma anglés, per tant es podría dir que no compleix la segona bona pràctica.\\
 
+Després d'afegir compatibilitat amb diferents idiomes (català, castellà i anglés), modularitat de les diferents imatges i icona de l'app depenent de l'idioma del dispositiu i suportar diferents tamanys (tablet i móbil) i disposicions (horitzontal i vertical) l'estructura de la carpeta resources queda de la següent forma:
 
+\vspace{0.5cm}
 \dirtree{%
 .0 res.
 .1 drawable.
@@ -223,10 +229,41 @@ per un dispositiu móvil (no tablet), amb layout portrait (vertical) i idioma an
 .1 values-night.
 .2 themes.xml.
 }
+\vspace{0.5cm}
+A més, s'han hagut de modificar els diferents layouts, per a que totes les strings, imatges, etc. referenciin a les imatges i strings corresponents.
 
+\begin{lstlisting}[language=XML]
+    activity_main.xml:
+
+    <TextView
+        android:id="@+id/textView"
+        ...
+        android:text="@string/hello\_world"
+        ...
+    />
+
+    <Button
+        android:id="@+id/button"
+        ...
+        android:text="@string/buttonToast"
+        ...
+    />
+
+    <ImageView
+        android:id="@+id/image\_1"
+        android:contentDescription="@string/image\_1\_description"
+        app:srcCompat="@drawable/image\_1" 
+        ...
+    />
+
+\end{lstlisting}
+
+\newpage
 \section{Añadir la funcionalidad de mostrar un mensaje emergente (Toast) en un botón del layout}
-Se han provado varias opciones:
-\subsection{Pasar como parametro a la función setOnClickListener una View con un método implementado onClickListener}
+Se han provado varias opciones para añadir funcionalidad al botón, todas funcionan y son igual de válidas:
+
+\subsection{Usando anonymous classes/lambdas}
+
 \begin{lstlisting}[language=Kotlin]
     val button = findViewById<Button>(R.id.button)
     button.setOnClickListener (
@@ -252,11 +289,12 @@ Que en kotlin, con su estilo de lambda, podemos simplificar a:
     }
 \end{lstlisting}
 
-También, podriamos haver creado una inner class Toaster para poder ejecutar el boton:
+\subsection{Creando una inner class}
+
 \begin{lstlisting}[language=Kotlin]
     private fun setUpButton() {
         val button = findViewById<Button>(R.id.button)
-        button.setOnClickListener (Toaster())
+        button.setOnClickListener(Toaster())
     }
 
     private inner class Toaster : View.OnClickListener {
@@ -270,7 +308,8 @@ También, podriamos haver creado una inner class Toaster para poder ejecutar el 
     }
 \end{lstlisting}
 
-En caso de que la hiciesemos estática, tendriamos un poco más de problemas, ya que deveríamos passar la View por parámetro para poder obtener el contexto:
+\subsection{Creando una clase estática}
+En caso de que la hiciesemos estática, tendriamos un poco más de problemas, ya que deberíamos passar la View por parámetro para poder obtener el contexto:
 \begin{lstlisting}[language=Kotlin]
     fun setUpButton() {
         val button = findViewById<Button>(R.id.button)
@@ -290,5 +329,45 @@ En caso de que la hiciesemos estática, tendriamos un poco más de problemas, ya
     }
 \end{lstlisting}
 
+\subsection{Añadir que función se debe de ejecutar en el xml del layout}
+En el layout:
+\begin{lstlisting}[language=XML]
+    <Button
+        android:id="@+id/button"
+        android:text="@string/buttonToast"
+        android:onClick="showToast"
+        ....
+    />
+\end{lstlisting}
+
+En el código de la activity:
+\begin{lstlisting}[language=Kotlin]
+    fun showToast(view: View) =
+        Toast.makeText(
+            applicationContext,
+            R.string.toastText,
+            Toast.LENGTH_SHORT
+        ).show()
+\end{lstlisting}
+
+\newpage
+\section{Imágenes del proyecto y repositorio remoto}
+
+Como no se pueden poner todos los archivos xml del proyecto en un documento pdf, se ha decidido añadir el link al repositorio de git, por 
+si el/la lector/a quiere consultar cualquier archivo. El repositorio se puede encontrar \href{https://github.com/Pablito2020/First-Activity}{aquí.}
+
+\begin{figure}[!htbp]
+    \includegraphics[scale = 0.12]{smartphone-vertical.jpg}
+    \centering
+    \caption{Aplicación en un móbil, con idioma inglés y layout portrait}
+    \label{vertical}
+\end{figure}
+
+\begin{figure}[!htbp]
+    \includegraphics[scale = 0.12]{smartphone-land.PNG}
+    \centering
+    \caption{Aplicación en un móbil, con idioma inglés y layout landscape}
+    \label{vertical}
+\end{figure}
 
 \end{document}
